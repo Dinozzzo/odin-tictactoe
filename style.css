@@ -14,7 +14,7 @@ body {
 }
 
 header {
-  height: 100px;
+  height: 150px;
   color: var(--midnight);
   font-size: 26px;
   display: flex;

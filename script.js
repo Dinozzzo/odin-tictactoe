@@ -1,15 +1,35 @@
 function tictactoe() {
-  const gameboard = {
-    table: [1, 2, 3, 4, 5, 6, 7, 8, 9],
-  };
+  const gameboard = (() => {
+    // MY ARRAY REPRESENTING THE GAME DISPLAY
+    let table = ["", "", "", "", "", "", "", "", ""];
 
-  function player(name, symbol, score) {
-    return {
-      name,
-      symbol,
-      score,
+    // PLACE THE SYMBOL IN A SPECIFIC POSITION
+    const addSymbol = (pos, symbol) => {
+      table[pos] = symbol;
+      console.log(table);
     };
-  }
+    return { table, addSymbol };
+  })();
 
-  const gameController = {};
+  // THIS CREATES A PLAYER IN GENERAL
+  function createPlayer(name, symbol, score) {
+    return {
+      name: name,
+      symbol: symbol,
+      score: score,
+    };
+  } // ADD THIS INSIDE GAMECONTROLLER ??
+
+  const gameController = (() => {
+    // CREATING PLAYERS 1 & 2
+    let player1 = createPlayer("Dino", "X", 0);
+    let player2 = createPlayer("Diah", "O", 0);
+
+    // HOW THE GAME WILL BE PLAYED
+    function playGame() {}
+
+    function finishRound() {}
+
+    function endGame() {}
+  })();
 }

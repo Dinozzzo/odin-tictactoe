@@ -1,5 +1,4 @@
 :root {
-  --beige: rgb(230, 214, 190);
   --midnight: rgb(27, 63, 72);
   --white: rgb(211, 219, 212);
 }
@@ -14,7 +13,7 @@ body {
 }
 
 header {
-  height: 150px;
+  height: 120px;
   color: var(--midnight);
   font-size: 26px;
   display: flex;
@@ -62,6 +61,24 @@ input {
   padding-left: 12px;
   font-size: 18px;
   border-radius: 10px;
+}
+
+button {
+  height: 40px;
+  width: 150px;
+  border-radius: 12px;
+  border: 2px solid var(--midnight);
+  background-color: var(--white);
+  color: var(--midnight);
+  font-size: 18px;
+}
+
+button:hover {
+  background-color: rgb(191, 203, 193);
+}
+
+button:active {
+  background-color: rgb(168, 184, 170);
 }
 
 /* GAME-GRID */

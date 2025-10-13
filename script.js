@@ -38,38 +38,48 @@ function tictactoe() {
         [0, 4, 8],
         [2, 4, 6],
       ];
+      let isGameOver = false;
 
-      // PLAYER 1 ROUND
-      const playerOneChoice = prompt(
-        "Player 1 : Choose a position between 0 and 8"
-      );
-      gameboard.addSymbol(playerOneChoice, player1.symbol);
+      while (isGameOver === false) {
+        // PLAYER 1 ROUND
+        const playerOneChoice = prompt(
+          "Player 1 : Choose a position between 0 and 8"
+        );
+        gameboard.addSymbol(playerOneChoice, player1.symbol);
 
-      // CHECKS IF PLAYER 1 WON
-      for (let value of winningCombinations) {
-        if (
-          gameboard.table[value[0]] === "X" &&
-          gameboard.table[value[1]] === "X" &&
-          gameboard.table[value[2]] === "X"
-        ) {
-          console.log("PLAYER 1 WIN");
+        // CHECKS IF PLAYER 1 WON
+        for (let value of winningCombinations) {
+          if (
+            gameboard.table[value[0]] === "X" &&
+            gameboard.table[value[1]] === "X" &&
+            gameboard.table[value[2]] === "X"
+          ) {
+            isGameOver = true;
+            console.log("PLAYER 1 WIN");
+            break;
+          }
         }
-      }
 
-      // PLAYER 2 ROUND
-      const playerTwoChoice = prompt(
-        "Player 2 : Choose a position between 0 and 8"
-      );
-      gameboard.addSymbol(playerTwoChoice, player2.symbol);
+        if (isGameOver === true) {
+          break;
+        }
+        // PLAYER 2 ROUND
+        const playerTwoChoice = prompt(
+          "Player 2 : Choose a position between 0 and 8"
+        );
+        gameboard.addSymbol(playerTwoChoice, player2.symbol);
 
-      // CHECKS IF PLAYER 2 WON
-      for (let value of winningCombinations) {
-        if (
-          gameboard.table[value[0]] === "O" &&
-          gameboard.table[value[1]] === "O" &&
-          gameboard.table[value[2]] === "O"
-        ) {
-          console.log("PLAYER 2 WIN");
+        // CHECKS IF PLAYER 2 WON
+        for (let value of winningCombinations) {
+          if (
+            gameboard.table[value[0]] === "O" &&
+            gameboard.table[value[1]] === "O" &&
+            gameboard.table[value[2]] === "O"
+          ) {
+            console.log("PLAYER 2 WIN");
+            isGameOver = true;
+            break;
+          }
         }
       }
     };

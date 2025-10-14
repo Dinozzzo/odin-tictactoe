@@ -56,10 +56,16 @@ function tictactoe() {
           ) {
             isGameOver = true;
             console.log("PLAYER 1 WIN");
-            break;
           }
         }
 
+        // STOP THE GAME IF TIE
+        if (isGameOver === false && !gameboard.table.includes(null)) {
+          isGameOver = true;
+          console.log("THE GAME IS A TIE");
+        }
+
+        // STOP THE GAME IF PLAYER 1 WIN
         if (isGameOver === true) {
           break;
         }
@@ -78,8 +84,17 @@ function tictactoe() {
           ) {
             console.log("PLAYER 2 WIN");
             isGameOver = true;
-            break;
           }
+        }
+
+        // STOP THE GAME IF TIE
+        if (isGameOver === false && !gameboard.table.includes(null)) {
+          isGameOver = true;
+          console.log("THE GAME IS A TIE");
+        }
+        // STOP THE GAME IF PLAYER 2 WIN
+        if (isGameOver === true) {
+          break;
         }
       }
     };

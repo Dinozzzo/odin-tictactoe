@@ -11,17 +11,15 @@ function tictactoe() {
     return { table, addSymbol };
   })();
 
-  // THIS CREATES A PLAYER IN GENERAL
-  function createPlayer(name, symbol, score) {
-    return {
-      name: name,
-      symbol: symbol,
-      score: score,
-    };
-  }
-
   const gameController = (() => {
     // CREATING PLAYERS 1 & 2
+    function createPlayer(name, symbol, score) {
+      return {
+        name: name,
+        symbol: symbol,
+        score: score,
+      };
+    }
     let player1 = createPlayer("Player 1", "X", 0);
     let player2 = createPlayer("Player 2", "O", 0);
 
@@ -38,65 +36,73 @@ function tictactoe() {
         [0, 4, 8],
         [2, 4, 6],
       ];
+
       let isGameOver = false;
 
-      while (isGameOver === false) {
-        // PLAYER 1 ROUND
-        const playerOneChoice = prompt(
-          "Player 1 : Choose a position between 0 and 8"
-        );
-        gameboard.addSymbol(playerOneChoice, player1.symbol);
+      const dom = (() => {
+        let isPlayerOneTurn = true;
+        const items = document.querySelectorAll(".item");
+        items.forEach((item) => {
+          item.addEventListener("click", () => {
+            let itemClicked = item;
+            if (isPlayerOneTurn) {
+              // ADD "X" ON THE DISPLAY
+              item.textContent = "X";
 
-        // CHECKS IF PLAYER 1 WON
-        for (let value of winningCombinations) {
-          if (
-            gameboard.table[value[0]] === "X" &&
-            gameboard.table[value[1]] === "X" &&
-            gameboard.table[value[2]] === "X"
-          ) {
-            isGameOver = true;
-            console.log("PLAYER 1 WIN");
-          }
-        }
+              // SEND X TO THE ARRAY TABLE
+              gameboard.addSymbol(itemClicked, "X");
 
-        // STOP THE GAME IF TIE
-        if (isGameOver === false && !gameboard.table.includes(null)) {
-          isGameOver = true;
-          console.log("THE GAME IS A TIE");
-        }
+              // SWAP THE PLAYER 2
+              isPlayerOneTurn = !isPlayerOneTurn;
 
-        // STOP THE GAME IF PLAYER 1 WIN
-        if (isGameOver === true) {
-          break;
-        }
-        // PLAYER 2 ROUND
-        const playerTwoChoice = prompt(
-          "Player 2 : Choose a position between 0 and 8"
-        );
-        gameboard.addSymbol(playerTwoChoice, player2.symbol);
+              // CHECK IF THERE IS A WINNING COMBINATION FOR P1
+              for (let value of winningCombinations) {
+                if (
+                  gameboard.table[value[0]] === "X" &&
+                  gameboard.table[value[1]] === "X" &&
+                  gameboard.table[value[2]] === "X"
+                ) {
+                  isGameOver = true;
+                  console.log("PLAYER 1 WIN");
+                }
+              }
 
-        // CHECKS IF PLAYER 2 WON
-        for (let value of winningCombinations) {
-          if (
-            gameboard.table[value[0]] === "O" &&
-            gameboard.table[value[1]] === "O" &&
-            gameboard.table[value[2]] === "O"
-          ) {
-            console.log("PLAYER 2 WIN");
-            isGameOver = true;
-          }
-        }
+              // STOP THE GAME IF TIE
+              if (isGameOver === false && !gameboard.table.includes(null)) {
+                isGameOver = true;
+                console.log("THE GAME IS A TIE");
+              }
+            } else {
+              // ADD "O" ON THE DISPLAY
+              item.textContent = "O";
 
-        // STOP THE GAME IF TIE
-        if (isGameOver === false && !gameboard.table.includes(null)) {
-          isGameOver = true;
-          console.log("THE GAME IS A TIE");
-        }
-        // STOP THE GAME IF PLAYER 2 WIN
-        if (isGameOver === true) {
-          break;
-        }
-      }
+              // SEND O TO THE ARRAY TABLE
+              gameboard.addSymbol(itemClicked, "O");
+
+              // SWAP TO PLAYER 1
+              isPlayerOneTurn = !isPlayerOneTurn;
+
+              // CHECK IF THERE IS A WINNING COMBINATION FOR P2
+              for (let value of winningCombinations) {
+                if (
+                  gameboard.table[value[0]] === "O" &&
+                  gameboard.table[value[1]] === "O" &&
+                  gameboard.table[value[2]] === "O"
+                ) {
+                  console.log("PLAYER 2 WIN");
+                  isGameOver = true;
+                }
+              }
+
+              // STOP THE GAME IF TIE
+              if (isGameOver === false && !gameboard.table.includes(null)) {
+                isGameOver = true;
+                console.log("THE GAME IS A TIE");
+              }
+            }
+          });
+        });
+      })();
     };
 
     return {

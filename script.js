@@ -12,6 +12,9 @@ function tictactoe() {
   })();
 
   const gameController = (() => {
+    const playerOneSection = document.querySelector(".player1-section");
+    const playerTwoSection = document.querySelector(".player2-section");
+
     // CREATING PLAYERS 1 & 2
     function createPlayer(name, symbol, score) {
       return {
@@ -20,8 +23,25 @@ function tictactoe() {
         score: score,
       };
     }
-    let player1 = createPlayer("Player 1", "X", 0);
-    let player2 = createPlayer("Player 2", "O", 0);
+
+    let player1 = createPlayer(null, "X", 0);
+    let player2 = createPlayer(null, "O", 0);
+
+    const playerDisplay = (() => {
+      const validButton = document.querySelector("button");
+
+      validButton.addEventListener("click", () => {
+        const playerOneInput = document.querySelector("#player1");
+        const playerTwoInput = document.querySelector("#player2");
+        player1.name = playerOneInput.value;
+        player2.name = playerTwoInput.value;
+        playerOneSection.innerHTML = `<p>${player1.name} : ${player1.score}</p>`;
+        playerTwoSection.innerHTML = `<p>${player2.name} : ${player2.score}</p>`;
+        [playerOneSection, playerTwoSection].forEach((section) => {
+          section.style.cssText = "color: rgb(211, 219, 212); font-size: 24px;";
+        });
+      });
+    })();
 
     // HOW THE GAME WILL BE PLAYED
     const playGame = () => {
@@ -41,17 +61,19 @@ function tictactoe() {
 
       const dom = (() => {
         let isPlayerOneTurn = true;
+
         const items = document.querySelectorAll(".item");
-        items.forEach((item) => {
+        items.forEach((item, index) => {
           item.addEventListener("click", () => {
-            let itemClicked = item;
+            if (item.textContent !== "") return;
+            let itemClicked = index;
             if (isPlayerOneTurn) {
               // ADD "X" ON THE DISPLAY
               item.textContent = "X";
 
               // SEND X TO THE ARRAY TABLE
               gameboard.addSymbol(itemClicked, "X");
-
+              console.table(gameboard.table);
               // SWAP THE PLAYER 2
               isPlayerOneTurn = !isPlayerOneTurn;
 
@@ -62,8 +84,9 @@ function tictactoe() {
                   gameboard.table[value[1]] === "X" &&
                   gameboard.table[value[2]] === "X"
                 ) {
-                  isGameOver = true;
+                  player1.score++;
                   console.log("PLAYER 1 WIN");
+                  isGameOver = true;
                 }
               }
 
@@ -89,6 +112,7 @@ function tictactoe() {
                   gameboard.table[value[1]] === "O" &&
                   gameboard.table[value[2]] === "O"
                 ) {
+                  player2.score++;
                   console.log("PLAYER 2 WIN");
                   isGameOver = true;
                 }
@@ -100,12 +124,17 @@ function tictactoe() {
                 console.log("THE GAME IS A TIE");
               }
             }
+            if (isGameOver === true) {
+              playerOneSection.innerHTML = `<p>${player1.name} : ${player1.score}</p>`;
+              playerTwoSection.innerHTML = `<p>${player2.name} : ${player2.score}</p>`;
+            }
           });
         });
       })();
     };
 
     return {
+      playerDisplay,
       playGame,
     };
   })();

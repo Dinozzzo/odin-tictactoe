@@ -1,52 +1,46 @@
 function tictactoe() {
   const gameboard = (() => {
-    // ARRAY REPRESENTING THE GAME DISPLAY
-    let table = [null, null, null, null, null, null, null, null, null];
-
-    // PLACE THE SYMBOL IN A SPECIFIC POSITION
+    let table = Array(9).fill(null);
     const addSymbol = (pos, symbol) => {
       table[pos] = symbol;
-      console.table(table);
     };
+
     return { table, addSymbol };
   })();
 
   const gameController = (() => {
+    const body = document.querySelector("body");
     const playerOneSection = document.querySelector(".player1-section");
     const playerTwoSection = document.querySelector(".player2-section");
+    const items = document.querySelectorAll(".item");
 
-    // CREATING PLAYERS 1 & 2
     function createPlayer(name, symbol, score) {
-      return {
-        name: name,
-        symbol: symbol,
-        score: score,
-      };
+      return { name, symbol, score };
     }
 
     let player1 = createPlayer(null, "X", 0);
     let player2 = createPlayer(null, "O", 0);
+    let PlayersValidated = false;
 
-    const playerDisplay = (() => {
-      const validButton = document.querySelector("button");
+    const validButton = document.querySelector("button");
 
-      validButton.addEventListener("click", () => {
-        const playerOneInput = document.querySelector("#player1");
-        const playerTwoInput = document.querySelector("#player2");
-        player1.name = playerOneInput.value;
-        player2.name = playerTwoInput.value;
-        playerOneSection.innerHTML = `<p>${player1.name} : ${player1.score}</p>`;
-        playerTwoSection.innerHTML = `<p>${player2.name} : ${player2.score}</p>`;
-        [playerOneSection, playerTwoSection].forEach((section) => {
-          section.style.cssText = "color: rgb(211, 219, 212); font-size: 24px;";
-        });
+    validButton.addEventListener("click", () => {
+      PlayersValidated = true;
+      const playerOneInput = document.querySelector("#player1");
+      const playerTwoInput = document.querySelector("#player2");
+      player1.name = playerOneInput.value;
+      player2.name = playerTwoInput.value;
+      playerOneSection.innerHTML = `<p>${player1.name} : ${player1.score}</p>`;
+      playerTwoSection.innerHTML = `<p>${player2.name} : ${player2.score}</p>`;
+      [playerOneSection, playerTwoSection].forEach((section) => {
+        section.style.cssText = "color: rgb(211, 219, 212); font-size: 24px;";
       });
-    })();
+      validButton.style.display = "none";
+    });
 
-    // HOW THE GAME WILL BE PLAYED
+    // PLAY GAME
     const playGame = () => {
-      // DIFFERENT WINNING COMBINATIONS
-      let winningCombinations = [
+      const winningCombinations = [
         [0, 1, 2],
         [3, 4, 5],
         [6, 7, 8],
@@ -58,85 +52,119 @@ function tictactoe() {
       ];
 
       let isGameOver = false;
+      let isPlayerOneTurn = true;
 
-      const dom = (() => {
-        let isPlayerOneTurn = true;
+      // Add listeners ONCE
+      items.forEach((item, index) => {
+        item.addEventListener("click", () => {
+          if (!PlayersValidated || isGameOver || item.textContent !== "")
+            return;
 
-        const items = document.querySelectorAll(".item");
-        items.forEach((item, index) => {
-          item.addEventListener("click", () => {
-            if (item.textContent !== "") return;
-            let itemClicked = index;
-            if (isPlayerOneTurn) {
-              // ADD "X" ON THE DISPLAY
-              item.textContent = "X";
+          const itemClicked = index;
 
-              // SEND X TO THE ARRAY TABLE
-              gameboard.addSymbol(itemClicked, "X");
-              console.table(gameboard.table);
-              // SWAP THE PLAYER 2
-              isPlayerOneTurn = !isPlayerOneTurn;
+          // PLAYER 1 TURN
+          if (isPlayerOneTurn) {
+            item.textContent = "X";
+            gameboard.addSymbol(itemClicked, "X");
+          } else {
+            item.textContent = "O";
+            gameboard.addSymbol(itemClicked, "O");
+          }
 
-              // CHECK IF THERE IS A WINNING COMBINATION FOR P1
-              for (let value of winningCombinations) {
-                if (
-                  gameboard.table[value[0]] === "X" &&
-                  gameboard.table[value[1]] === "X" &&
-                  gameboard.table[value[2]] === "X"
-                ) {
-                  player1.score++;
-                  console.log("PLAYER 1 WIN");
-                  isGameOver = true;
-                }
-              }
+          // CHECK WINNER
+          let currentSymbol = isPlayerOneTurn ? "X" : "O";
+          for (let combo of winningCombinations) {
+            if (
+              gameboard.table[combo[0]] === currentSymbol &&
+              gameboard.table[combo[1]] === currentSymbol &&
+              gameboard.table[combo[2]] === currentSymbol
+            ) {
+              if (currentSymbol === "X") player1.score++;
+              else player2.score++;
 
-              // STOP THE GAME IF TIE
-              if (isGameOver === false && !gameboard.table.includes(null)) {
-                isGameOver = true;
-                console.log("THE GAME IS A TIE");
-              }
-            } else {
-              // ADD "O" ON THE DISPLAY
-              item.textContent = "O";
-
-              // SEND O TO THE ARRAY TABLE
-              gameboard.addSymbol(itemClicked, "O");
-
-              // SWAP TO PLAYER 1
-              isPlayerOneTurn = !isPlayerOneTurn;
-
-              // CHECK IF THERE IS A WINNING COMBINATION FOR P2
-              for (let value of winningCombinations) {
-                if (
-                  gameboard.table[value[0]] === "O" &&
-                  gameboard.table[value[1]] === "O" &&
-                  gameboard.table[value[2]] === "O"
-                ) {
-                  player2.score++;
-                  console.log("PLAYER 2 WIN");
-                  isGameOver = true;
-                }
-              }
-
-              // STOP THE GAME IF TIE
-              if (isGameOver === false && !gameboard.table.includes(null)) {
-                isGameOver = true;
-                console.log("THE GAME IS A TIE");
-              }
+              isGameOver = true;
+              showResult(
+                currentSymbol === "X"
+                  ? `${player1.name} won this round!`
+                  : `${player2.name} won this round!`
+              );
+              updateScore();
+              return;
             }
-            if (isGameOver === true) {
-              playerOneSection.innerHTML = `<p>${player1.name} : ${player1.score}</p>`;
-              playerTwoSection.innerHTML = `<p>${player2.name} : ${player2.score}</p>`;
-            }
-          });
+          }
+
+          // CHECK DRAW
+          if (!gameboard.table.includes(null)) {
+            isGameOver = true;
+            showResult("This round is a draw!");
+            return;
+          }
+
+          // SWAP TURN
+          isPlayerOneTurn = !isPlayerOneTurn;
         });
-      })();
+      });
+
+      // UPDATE SCORE DISPLAY
+      const updateScore = () => {
+        playerOneSection.innerHTML = `<p>${player1.name} : ${player1.score}</p>`;
+        playerTwoSection.innerHTML = `<p>${player2.name} : ${player2.score}</p>`;
+      };
+
+      // SHOW RESULT OVERLAY
+      const showResult = (message) => {
+        items.forEach((item) => (item.style.pointerEvents = "none"));
+
+        const resultDisplay = document.createElement("div");
+        resultDisplay.style.cssText = `
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          background: rgba(255, 255, 255, 0.6);
+          backdrop-filter: blur(10px);
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          color: rgb(27, 63, 72);
+          font-size: 48px;
+          font-weight: bold;
+          z-index: 999;
+          gap: 50px;`;
+        body.appendChild(resultDisplay);
+
+        const resultMessage = document.createElement("p");
+        resultMessage.textContent = message;
+        resultDisplay.appendChild(resultMessage);
+
+        const reloadButton = document.createElement("button");
+        reloadButton.textContent = "Start new round";
+        reloadButton.style.cssText = `
+          width: 300px;
+          height: 75px;
+          background-color: rgb(211, 219, 212);
+          color: rgb(27, 63, 72);
+          border: solid 3px rgb(27, 63, 72);
+          font-size: 24px;
+          border-radius: 35px;`;
+        resultDisplay.appendChild(reloadButton);
+
+        reloadButton.addEventListener("click", () => {
+          gameboard.table.fill(null);
+          items.forEach((item) => {
+            item.textContent = "";
+            item.style.pointerEvents = "auto";
+          });
+          isGameOver = false;
+          isPlayerOneTurn = true;
+          body.removeChild(resultDisplay);
+        });
+      };
     };
 
-    return {
-      playerDisplay,
-      playGame,
-    };
+    return { playGame };
   })();
 
   gameController.playGame();

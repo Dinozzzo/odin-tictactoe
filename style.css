@@ -32,12 +32,13 @@ header {
 }
 
 .player-section {
+  padding-top: 18px;
   height: 200px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 25px;
 }
 
 .player1-section,
@@ -64,13 +65,13 @@ input {
 }
 
 button {
-  height: 40px;
+  height: 50px;
   width: 150px;
   border-radius: 12px;
   border: 2px solid var(--midnight);
   background-color: var(--white);
   color: var(--midnight);
-  font-size: 18px;
+  font-size: 22px;
 }
 
 button:hover {
